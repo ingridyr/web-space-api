@@ -1,9 +1,8 @@
-const { Router } = require("express")
+const { Router } = require("express");
+const UserControllers = require("../controllers/user");
 
-const router = Router()
+const router = Router();
 
-router.get('/', (req, res) => {
-    return res.send("oi sou a rota 1")
-})
+router.post("/", (req, res) => UserControllers.createUser(req, res));
 
-module.exports = router
+module.exports = router;
