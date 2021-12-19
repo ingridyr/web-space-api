@@ -1,6 +1,6 @@
-const mongoose = require("../database");
+const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGO_URL, { useMongoClient: true });
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
 
 mongoose.Promise = global.Promise;
 
