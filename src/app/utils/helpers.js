@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const authConfig = require("../../config/authConfig.json");
+
 class Helpers {
   static paginateData(data, page = 1, perPage = 15) {
     page = Number(page);
@@ -17,6 +20,12 @@ class Helpers {
       nextPage: nextPage,
       data: dataSliced,
     };
+  }
+
+  static generateToken(params = {}) {
+    return jwt.sign(params, authConfig.secret, {
+      expiresIn: 86400
+    })
   }
 }
 
