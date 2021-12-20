@@ -1,9 +1,11 @@
 const { Router } = require("express");
 const PostControllers = require("../controllers/post");
+const authMiddleware = require("../middlewares/auth");
+
 
 const router = Router();
 
-// use middlewares here
+router.use(authMiddleware)
 
 router.get("", (req, res) => PostControllers.readAllPosts(req, res));
 router.get("/:id", (req, res) => PostControllers.readOnePost(req, res));
