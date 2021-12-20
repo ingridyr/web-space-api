@@ -12,7 +12,7 @@ router.post("", (req, res) => PostControllers.createPost(req, res));
 
 router.patch("/:id", (req, res) => PostControllers.updatePost(req, res));
 router.patch("/:id/likes", (req, res) => PostControllers.updatePostLikes(req, res));
-router.patch("/:id/commets", (req, res) => PostControllers.updatePostComments(req, res));
+router.patch("/:id/comments", (req, res) => PostControllers.updatePostComments(req, res));
 
 router.delete("/:id", (req, res) => PostControllers.deletePost(req, res));
 
