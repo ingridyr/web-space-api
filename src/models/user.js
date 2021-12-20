@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
     maxLength: 180,
+    default: "",
   },
   birthDate: {
     type: Date,
@@ -37,6 +38,7 @@ const UserSchema = new mongoose.Schema({
   photoUrl: {
     type: String,
     required: false,
+    default: "",
   },
   followers: {
     type: Array,
@@ -59,13 +61,8 @@ const UserSchema = new mongoose.Schema({
   },
   updatedAt: {
     type: Date,
-    default: Date.now,
-  },
-  id: {
-    type: Number,
-    required: true,
-    unique: true
-  },
+    default: null,
+  }
 });
 
 UserSchema.pre('save', async function(next) {
