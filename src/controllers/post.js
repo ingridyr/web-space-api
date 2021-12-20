@@ -1,6 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
-const Helpers = require("../Utils/helpers");
+const Helpers = require("../utils/helpers");
 
 class PostControllers {
   static async readAllPosts(req, res) {
