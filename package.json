@@ -14,7 +14,7 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "node scr/server.js",
+    "start": "node src/server.js",
     "dev": "npx nodemon src/server.js"
   }
 }
