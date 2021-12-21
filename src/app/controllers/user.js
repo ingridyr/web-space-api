@@ -5,18 +5,18 @@ const Helpers = require("../utils/helpers");
 class UserControllers {
   static async createUser(req, res) {
     try {
-    const { email, username, phone } = req.body;
-    if (await User.findOne({ email })) {
-      return res.status(409).json({ error: "User email already exists." });
-    }
-    if (await User.findOne({ username })) {
-      return res.status(409).json({ error: "Username already exists." });
-    }
-    if (await User.findOne({ phone })) {
-      return res
-        .status(409)
-        .json({ error: "User phone number already exists." });
-    }
+    // const { email, username, phone } = req.body;
+    // if (await User.findOne({ email })) {
+    //   return res.status(409).json({ error: "User email already exists." });
+    // }
+    // if (await User.findOne({ username })) {
+    //   return res.status(409).json({ error: "Username already exists." });
+    // }
+    // if (await User.findOne({ phone })) {
+    //   return res
+    //     .status(409)
+    //     .json({ error: "User phone number already exists." });
+    // }
 
     const userBody = req.body;
 
