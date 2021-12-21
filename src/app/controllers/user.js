@@ -4,7 +4,7 @@ const Helpers = require("../utils/helpers");
 
 class UserControllers {
   static async createUser(req, res) {
-    // try {
+    try {
     const { email, username, phone } = req.body;
     if (await User.findOne({ email })) {
       return res.status(409).json({ error: "User email already exists." });
@@ -26,12 +26,12 @@ class UserControllers {
     return res
       .status(201)
       .json({ user, token: Helpers.generateToken({ id: user.id }) });
-    // } catch (err) {
-    //   console.log(err)
-    //   return res.status(400).json({
-    //     error: err,
-    //   });
-    // }
+    } catch (err) {
+      console.log(err)
+      return res.status(400).json({
+        error: err,
+      });
+    }
   }
 
   static async readAllUsers(req, res) {
