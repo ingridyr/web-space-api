@@ -25,6 +25,7 @@ class UserControllers {
 
       return res.status(201).json({user, token: Helpers.generateToken({id: user.id})});
     } catch (err) {
+      console.log(err)
       return res.status(400).json({
         error: err,
       });
