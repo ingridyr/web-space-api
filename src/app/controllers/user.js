@@ -4,32 +4,34 @@ const Helpers = require("../utils/helpers");
 
 class UserControllers {
   static async createUser(req, res) {
-    try {
-      const { email, username, phone } = req.body;
-      if (await User.findOne({ email })) {
-        return res.status(409).json({ error: "User email already exists." });
-      }
-      if (await User.findOne({ username })) {
-        return res.status(409).json({ error: "Username already exists." });
-      }
-      if (await User.findOne({ phone })) {
-        return res
-          .status(409)
-          .json({ error: "User phone number already exists." });
-      }
-
-      const userBody = req.body;
-
-      const user = await User.create(userBody);
-      user.password = undefined;
-
-      return res.status(201).json({user, token: Helpers.generateToken({id: user.id})});
-    } catch (err) {
-      console.log(err)
-      return res.status(400).json({
-        error: err,
-      });
+    // try {
+    const { email, username, phone } = req.body;
+    if (await User.findOne({ email })) {
+      return res.status(409).json({ error: "User email already exists." });
     }
+    if (await User.findOne({ username })) {
+      return res.status(409).json({ error: "Username already exists." });
+    }
+    if (await User.findOne({ phone })) {
+      return res
+        .status(409)
+        .json({ error: "User phone number already exists." });
+    }
+
+    const userBody = req.body;
+
+    const user = await User.create(userBody);
+    user.password = undefined;
+
+    return res
+      .status(201)
+      .json({ user, token: Helpers.generateToken({ id: user.id }) });
+    // } catch (err) {
+    //   console.log(err)
+    //   return res.status(400).json({
+    //     error: err,
+    //   });
+    // }
   }
 
   static async readAllUsers(req, res) {
@@ -108,19 +110,21 @@ class UserControllers {
   static async login(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({email}).select("+password")
-      if(!user){
-        return res.status(404).json({"error": "User not found"});
+      const user = await User.findOne({ email }).select("+password");
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
       }
-      if(!(await bcrypt.compare(password, user.password))){
-        return res.status(401).json({"error": "Invalid password"});
+      if (!(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({ error: "Invalid password" });
       }
       user.password = undefined;
-      return res.status(200).json({user, token: Helpers.generateToken({id: user.id})})
-    } catch  (err) {
+      return res
+        .status(200)
+        .json({ user, token: Helpers.generateToken({ id: user.id }) });
+    } catch (err) {
       return res.status(400).json(err);
     }
-  } 
+  }
 }
 
 module.exports = UserControllers;
