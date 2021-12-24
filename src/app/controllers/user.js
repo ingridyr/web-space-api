@@ -1,20 +1,21 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const Helpers = require("../utils/helpers");
+const ProfileImage = require("../models/profileImage");
 
 class UserControllers {
   static async createUser(req, res) {
     try {
-    const userBody = req.body;
+      const userBody = req.body;
 
-    const user = await User.create(userBody);
-    user.password = undefined;
+      const user = await User.create(userBody);
+      user.password = undefined;
 
-    return res
-      .status(201)
-      .json({ user, token: Helpers.generateToken({ id: user.id }) });
+      return res
+        .status(201)
+        .json({ user, token: Helpers.generateToken({ id: user.id }) });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(400).json({
         error: err,
       });
@@ -81,14 +82,36 @@ class UserControllers {
 
   static async updatePhotoUrl(req, res) {
     try {
-      const { photoUrl } = req.body;
-      const user = await User.findByIdAndUpdate(req.params.id, {
-        photoUrl,
+      const { originalname: name, size, key, location: url = "" } = req.file;
+      const userId = req.params.id;
+
+      const user = await User.findById(userId);
+
+
+      if (user.photo && user.photo.photoId) {
+        const imageToRemove = await ProfileImage.findById(user.photo.photoId);
+        await imageToRemove.remove();
+      }
+
+      const image = await ProfileImage.create({
+        name,
+        size,
+        key,
+        url,
+        userId,
+      });
+
+      const newPhoto = { url: image.url, photoId: image._id };
+
+      const userUpdated = await User.findByIdAndUpdate(userId, {
+        photo: newPhoto,
         updatedAt: Date.now(),
         new: true,
       });
-      user.photoUrl = photoUrl && photoUrl;
-      return res.status(200).json(user);
+
+      userUpdated.photo = newPhoto;
+
+      return res.json(userUpdated);
     } catch (err) {
       return res.status(400).json(err);
     }
