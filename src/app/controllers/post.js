@@ -1,6 +1,8 @@
 const Post = require("../models/post");
 const User = require("../models/user");
 const Helpers = require("../utils/helpers");
+const PostImage = require("../models/postImage");
+
 
 class PostControllers {
   static async readAllPosts(req, res) {
@@ -16,7 +18,7 @@ class PostControllers {
     try {
       const post = await Post.findById(req.params.id);
       if (!post) {
-        return res.status(404).json({"error": "post not found"})
+        return res.status(404).json({ error: "post not found" });
       }
       return res.status(200).json(post);
     } catch (err) {
@@ -27,6 +29,24 @@ class PostControllers {
     try {
       const body = req.body;
       const post = await Post.create(body);
+      let newPhoto;
+
+      if (req.file) {
+        const { originalname: name, size, key, location: url = "" } = req.file;
+
+        const image = await PostImage.create({
+          name,
+          size,
+          key,
+          url,
+          postId: post._id
+        });
+
+        newPhoto = { url: image.url, photoId: image._id };
+      }
+
+      post.photo = newPhoto
+
       const user = await User.findById(body.user);
       const posts = [...user.posts, post];
       await User.findByIdAndUpdate(body.user, {
@@ -47,8 +67,8 @@ class PostControllers {
         updatedAt: Date.now(),
         new: true,
       });
-      post.title = title && title
-      post.description = description && description
+      post.title = title && title;
+      post.description = description && description;
       return res.status(200).json(post);
     } catch (err) {
       return res.status(400).json(err);
@@ -57,13 +77,52 @@ class PostControllers {
   static async updatePostLikes(req, res) {
     try {
       const id = req.params.id;
+      const { userId } = req.body;
+
       const post = await Post.findById(id);
+
+      if (post.likes.includes(userId)) {
+        post.likes = post.likes.filter((item) => item !== userId);
+      } else {
+        post.likes = [...post.likes, userId];
+        post.dislikes = post.dislikes.filter((item) => item !== userId);
+      }
+
       const updatedLike = await Post.findByIdAndUpdate(id, {
-        likes: post.likes + 1,
+        likes: post.likes,
+        dislikes: post.dislikes,
         updatedAt: Date.now(),
         new: true,
       });
-      updatedLike.likes += 1;
+      updatedLike.likes = post.likes;
+
+      return res.status(200).json(updatedLike);
+    } catch (err) {
+      return res.status(400).json(err);
+    }
+  }
+  static async updatePostDislikes(req, res) {
+    try {
+      const id = req.params.id;
+      const { userId } = req.body;
+
+      const post = await Post.findById(id);
+
+      if (post.dislikes.includes(userId)) {
+        post.dislikes = post.dislikes.filter((item) => item !== userId);
+      } else {
+        post.dislikes = [...post.dislikes, userId];
+        post.likes = post.likes.filter((item) => item !== userId);
+      }
+
+      const updatedLike = await Post.findByIdAndUpdate(id, {
+        likes: post.likes,
+        dislikes: post.dislikes,
+        updatedAt: Date.now(),
+        new: true,
+      });
+      updatedLike.likes = post.likes;
+
       return res.status(200).json(updatedLike);
     } catch (err) {
       return res.status(400).json(err);
@@ -72,23 +131,35 @@ class PostControllers {
   static async updatePostComments(req, res) {
     try {
       const id = req.params.id;
-      const { comment } = req.body;
+      const { comment, userId } = req.body;
+
       const post = await Post.findById(id);
+      const user = await User.findById(userId);
+
+      const newComment = {
+        userId: user._id,
+        username: user.username,
+        userPhoto: user.photoUrl,
+        comment,
+      };
+
       const updatedComments = await Post.findByIdAndUpdate(id, {
-        comments: [...post.comments, comment],
+        comments: [...post.comments, newComment],
         updatedAt: Date.now(),
         new: true,
       });
-      updatedComments.comments = [...post.comments, comment];
+      updatedComments.comments = [...post.comments, newComment];
+
       return res.status(200).json(updatedComments);
     } catch (err) {
+      console.log(err);
       return res.status(400).json(err);
     }
   }
   static async deletePost(req, res) {
     try {
       await Post.findByIdAndRemove(req.params.id);
-      return res.status(204).json({})
+      return res.status(204).json({});
     } catch (err) {
       return res.status(400).json(err);
     }

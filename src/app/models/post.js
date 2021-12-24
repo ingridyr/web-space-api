@@ -15,14 +15,18 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  photoUrl: {
-    type: String,
-    required: false
+  photo: {
+    type: Object,
+    required: false,
+    default: {},
   },
   likes: {
-    type: Number,
+    type: Array,
     required: false,
-    default: 0
+  },
+  dislikes: {
+    type: Array,
+    required: false,
   },
   comments: {
     type: Array,
