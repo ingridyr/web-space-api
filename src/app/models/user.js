@@ -35,10 +35,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  photoUrl: {
-    type: String,
+  photo: {
+    type: Object,
     required: false,
-    default: "",
+    default: {},
   },
   followers: {
     type: Array,

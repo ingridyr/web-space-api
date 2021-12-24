@@ -6,13 +6,22 @@ class Helpers {
     page = Number(page);
     perPage = Number(perPage);
 
+    const lastPage = Math.ceil(data.length / perPage);
+
+    if (page > lastPage) {
+      page = lastPage
+    }
+
     const start = (page - 1) * perPage;
     const end = start + perPage;
 
     const dataSliced = data.slice(start, end);
 
-    const previousPage = page - 1 > 1 ? page - 1 : null;
-    const nextPage = page + 1;
+    const previousPage =
+      page - 1 >= 1 ? `page=${page - 1}&perPage=${perPage}` : null;
+    const nextPage =
+      end < data.length ? `page=${page + 1}&perPage=${perPage}` : null;
+
 
     return {
       page: page,
