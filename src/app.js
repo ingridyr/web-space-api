@@ -7,6 +7,8 @@ const path = require("path");
 const userRouter = require("./app/routes/user");
 const postRouter = require("./app/routes/post");
 const authRouter = require("./app/routes/auth");
+const messageRouter = require("./app/routes/message");
+const conversationRouter = require("./app/routes/conversation");
 
 const app = express();
 
@@ -23,6 +25,9 @@ app.use(
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/auth", authRouter);
+app.use("/message", messageRouter);
+app.use("/conversation", conversationRouter);
+
 
 
 module.exports = app;
