@@ -28,12 +28,11 @@ class PostControllers {
   static async createPost(req, res) {
     try {
       const body = req.body;
-      const post = await Post.create(body);
       let newPhoto;
-
+      
       if (req.file) {
         const { originalname: name, size, key, location: url = "" } = req.file;
-
+        
         const image = await PostImage.create({
           name,
           size,
@@ -45,8 +44,9 @@ class PostControllers {
         newPhoto = { url: image.url, photoId: image._id };
       }
 
-      post.photo = newPhoto
-
+      body.photo = newPhoto
+      const post = await Post.create(body);
+      
       const user = await User.findById(body.user);
       const posts = [...user.posts, post];
       await User.findByIdAndUpdate(body.user, {
