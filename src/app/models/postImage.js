@@ -11,11 +11,6 @@ const PostImageSchema = new mongoose.Schema({
   size: Number,
   key: String,
   url: String,
-  postId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "PostSchema",
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,
