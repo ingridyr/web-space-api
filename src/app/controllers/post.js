@@ -55,6 +55,7 @@ class PostControllers {
       });
       return res.status(201).json(post);
     } catch (err) {
+      console.log(err)
       return res.status(400).json(err);
     }
   }
