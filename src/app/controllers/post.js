@@ -38,7 +38,6 @@ class PostControllers {
           size,
           key,
           url,
-          postId: post._id
         });
 
         newPhoto = { url: image.url, photoId: image._id };
