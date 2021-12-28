@@ -19,7 +19,7 @@ class MessageControllers {
 
   static async readMessages(req, res) {
     try {
-      const { id } = req.params.id;
+      const { id } = req.params;
       const messages = await Message.find({
         conversationId: id
       });
