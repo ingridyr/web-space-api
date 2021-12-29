@@ -9,11 +9,11 @@ const PostSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    maxLength: 64
+    maxLength: 64,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   photo: {
     type: Object,
@@ -30,18 +30,17 @@ const PostSchema = new mongoose.Schema({
   },
   comments: {
     type: Array,
-    required: false
+    required: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
   },
   updatedAt: {
     type: Date,
-    default: null
-  }
-
-})
+    default: null,
+  },
+});
 
 const Post = mongoose.model("Post", PostSchema);
 

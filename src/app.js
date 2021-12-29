@@ -28,6 +28,4 @@ app.use("/auth", authRouter);
 app.use("/message", messageRouter);
 app.use("/conversation", conversationRouter);
 
-
-
 module.exports = app;

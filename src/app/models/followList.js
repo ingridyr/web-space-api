@@ -18,6 +18,6 @@ const FollowListSchema = new mongoose.Schema({
     type: Array,
     required: false,
   },
-})
+});
 
 module.exports = mongoose.model("FollowList", FollowListSchema);

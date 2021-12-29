@@ -9,7 +9,7 @@ class Helpers {
     const lastPage = Math.ceil(data.length / perPage);
 
     if (page > lastPage) {
-      page = lastPage
+      page = lastPage;
     }
 
     const start = (page - 1) * perPage;
@@ -22,7 +22,6 @@ class Helpers {
     const nextPage =
       end < data.length ? `page=${page + 1}&perPage=${perPage}` : null;
 
-
     return {
       page: page,
       previousPage: previousPage,
@@ -33,8 +32,8 @@ class Helpers {
 
   static generateToken(params = {}) {
     return jwt.sign(params, authConfig.secret, {
-      expiresIn: 86400
-    })
+      expiresIn: 86400,
+    });
   }
 }
 

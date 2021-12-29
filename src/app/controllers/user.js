@@ -144,28 +144,11 @@ class UserControllers {
     }
   }
 
-  static async readFriendList(req, res) {
+  static async readFollows(req, res) {
     try {
-      const { page, perPage } = req.query;
-      const friends = await User.find();
-      return res.status(200).json(Helpers.paginateData(friends, page, perPage));
-    } catch (err) {
-      return res.status(400).json(err);
-    }
-  }
-
-  static async updateFriendList(req, res) {
-    try {
-      const id = req.params.id;
-      const friend = await User.findById(id);
-
-      const updatedFriend = await User.findByIdAndUpdate(id, {
-        friendList,
-        updatedAt: Date.now(),
-        new: true,
-      });
-      updatedFriend.friendList = friend.friendList;
-      return res.status(200).json(updatedFriend);
+      const { followListId } = req.params;
+      const followList = await FollowList.findById(followListId);
+      return res.status(200).json(followList);
     } catch (err) {
       return res.status(400).json(err);
     }
@@ -178,27 +161,39 @@ class UserControllers {
       const targetUser = await User.findById(target);
       const currentUser = await User.findById(current);
 
-      const currentFollowList = await FollowList.findById(currentUser.followList);
+      const currentFollowList = await FollowList.findById(
+        currentUser.followList
+      );
       const targetFollowList = await FollowList.findById(targetUser.followList);
-      const targetFollowListIds = targetFollowList.followers.map((item) => item._id.toString());
+      const targetFollowListIds = targetFollowList.followers.map((item) =>
+        item._id.toString()
+      );
 
       if (!targetFollowListIds.includes(current)) {
         await FollowList.update(
-          { "_id": targetUser.followList },
-          { "$push": { followers: currentUser } },
+          { _id: targetUser.followList },
+          { $push: { followers: currentUser } },
           { new: true }
         );
 
         await FollowList.update(
-          { "_id": currentUser.followList },
-          { "$push": { following: targetUser } }
+          { _id: currentUser.followList },
+          { $push: { following: targetUser } }
         );
 
-        return res.status(200).json({"msg": `${currentUser.username} is following ${targetUser.username}`});
+        return res
+          .status(200)
+          .json({
+            msg: `${currentUser.username} is following ${targetUser.username}`,
+          });
       }
 
-      const removedFromTarget = targetFollowList.followers.filter(item => item.username !== currentUser.username)
-      const removedFromCurrent = currentFollowList.following.filter(item => item.username !== targetUser.username)
+      const removedFromTarget = targetFollowList.followers.filter(
+        (item) => item.username !== currentUser.username
+      );
+      const removedFromCurrent = currentFollowList.following.filter(
+        (item) => item.username !== targetUser.username
+      );
 
       await FollowList.findByIdAndUpdate(targetUser.followList, {
         followers: removedFromTarget,
@@ -210,7 +205,11 @@ class UserControllers {
         new: true,
       });
 
-      return res.status(200).json({"msg": `${currentUser.username} stopped following ${targetUser.username}`});
+      return res
+        .status(200)
+        .json({
+          msg: `${currentUser.username} stopped following ${targetUser.username}`,
+        });
     } catch (err) {
       return res.status(400).json(err);
     }
