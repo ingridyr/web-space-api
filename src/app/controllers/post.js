@@ -3,7 +3,6 @@ const User = require("../models/user");
 const Helpers = require("../utils/helpers");
 const PostImage = require("../models/postImage");
 
-
 class PostControllers {
   static async readAllPosts(req, res) {
     try {
@@ -43,9 +42,9 @@ class PostControllers {
         newPhoto = { url: image.url, photoId: image._id };
       }
 
-      body.photo = newPhoto
+      body.photo = newPhoto;
       const post = await Post.create(body);
-      
+
       const user = await User.findById(body.user);
       const posts = [...user.posts, post];
       await User.findByIdAndUpdate(body.user, {
