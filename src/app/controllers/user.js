@@ -143,6 +143,34 @@ class UserControllers {
       return res.status(400).json(err);
     }
   }
+
+  static async readFriendList(req, res) {
+    try {
+      const { page, perPage } = req.query;
+      const friends = await User.find();
+      return res.status(200).json(Helpers.paginateData(friends, page, perPage));
+    } catch (err) {
+      return res.status(400).json(err);
+    }
+  }
+
+  static async updateFriendList(req, res) {
+    try {
+      const id = req.params.id;
+      const friend = await User.findById(id);
+
+      const updatedFriend = await User.findByIdAndUpdate(id, {
+        friendList,
+        updatedAt: Date.now(),
+        new: true,
+      });
+      updatedFriend.friendList = friend.friendList;
+      return res.status(200).json(updatedFriend);
+    } catch (err) {
+      return res.status(400).json(err);
+    }
+  }
+
   static async follow(req, res) {
     try {
       const { current, target } = req.params;
