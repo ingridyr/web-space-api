@@ -9,7 +9,7 @@ class MessageControllers {
       const message = await Message.create({
         conversationId,
         senderId,
-        text
+        text,
       });
       res.status(201).json(message);
     } catch (err) {
@@ -21,7 +21,7 @@ class MessageControllers {
     try {
       const { id } = req.params;
       const messages = await Message.find({
-        conversationId: id
+        conversationId: id,
       });
       res.status(200).json(messages);
     } catch (err) {
