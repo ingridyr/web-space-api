@@ -55,7 +55,11 @@ const UserSchema = new mongoose.Schema({
       required: false,
     },
   ],
-  cratedAt: {
+  friendList: {
+    type: Array,
+    required: false,
+  },
+  createdAt: {
     type: Date,
     default: Date.now,
   },
