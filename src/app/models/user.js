@@ -15,11 +15,12 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
     required: true,
-    select: false
+    select: false,
   },
   bio: {
     type: String,
@@ -34,18 +35,16 @@ const UserSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
+    unique: true,
   },
   photo: {
     type: Object,
     required: false,
     default: {},
   },
-  followers: {
-    type: Array,
-    required: false,
-  },
-  following: {
-    type: Array,
+  followList: {
+    type: mongoose.Schema.ObjectId,
+    ref: "FollowListSchema",
     required: false,
   },
   posts: [
@@ -62,14 +61,13 @@ const UserSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: null,
-  }
+  },
 });
 
-UserSchema.pre('save', async function(next) {
-  const hash = await bcrypt.hash(this.password, 10)
-  this.password = hash,
-  next();
-})
+UserSchema.pre("save", async function (next) {
+  const hash = await bcrypt.hash(this.password, 10);
+  (this.password = hash), next();
+});
 
 const User = mongoose.model("User", UserSchema);
 
