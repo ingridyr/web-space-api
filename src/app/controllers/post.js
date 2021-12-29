@@ -28,10 +28,10 @@ class PostControllers {
     try {
       const body = req.body;
       let newPhoto;
-
+      
       if (req.file) {
         const { originalname: name, size, key, location: url = "" } = req.file;
-
+        
         const image = await PostImage.create({
           name,
           size,
