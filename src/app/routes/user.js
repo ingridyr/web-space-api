@@ -10,7 +10,7 @@ router.use(authMiddleware);
 
 router.get("/", (req, res) => UserControllers.readAllUsers(req, res));
 router.get("/follows/:followListId", (req, res) => UserControllers.readFollows(req, res));
-router.get("/:id", (req, res) => UserControllers.readOneUser(req, res));
+router.get("/:username", (req, res) => UserControllers.readOneUser(req, res));
 
 router.patch("/:id", (req, res) => UserControllers.updateUserInfo(req, res));
 router.patch("/:id", (req, res) => UserControllers.updatePassword(req, res));

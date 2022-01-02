@@ -43,7 +43,7 @@ class UserControllers {
 
   static async readOneUser(req, res) {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await User.find({ username: req.params.username });
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -181,11 +181,9 @@ class UserControllers {
           { $push: { following: targetUser } }
         );
 
-        return res
-          .status(200)
-          .json({
-            msg: `${currentUser.username} is following ${targetUser.username}`,
-          });
+        return res.status(200).json({
+          msg: `${currentUser.username} is following ${targetUser.username}`,
+        });
       }
 
       const removedFromTarget = targetFollowList.followers.filter(
@@ -205,11 +203,9 @@ class UserControllers {
         new: true,
       });
 
-      return res
-        .status(200)
-        .json({
-          msg: `${currentUser.username} stopped following ${targetUser.username}`,
-        });
+      return res.status(200).json({
+        msg: `${currentUser.username} stopped following ${targetUser.username}`,
+      });
     } catch (err) {
       return res.status(400).json(err);
     }
